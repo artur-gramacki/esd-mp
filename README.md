@@ -1,2 +1,7 @@
 # Epileptic-Seizure-Detection-by-Matching-Pursuit
-test
+
+This is the Electronic Supplements for the paper:
+
+> ## A deep learning epileptic seizure detection based on matching pursuit algorithm and its time-frequency graphical representation ##
+
+by *Mateusz Kunik & Artur Gramacki*
