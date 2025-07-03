@@ -1,0 +1,5 @@
+data/primary/*
+data/models/*
+
+!data/primary/
+!data/models/
