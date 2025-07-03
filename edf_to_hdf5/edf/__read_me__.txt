@@ -1,4 +1,6 @@
 Download to this directory 79 EDF files of neonatal EEG recordings from https://zenodo.org/record/4940267. 
+If the EDF files are not currently available in the repository provided above, please contact the authors of the article.
+You should have files with the following names in this directory:
 
 eeg1.edf
 eeg10.edf
