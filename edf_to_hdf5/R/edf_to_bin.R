@@ -19,7 +19,15 @@ source("funs.R")
 dir = "../"
 
 # Check if edf files are already downloaded into the 'edf' dir.
-files <- list.files(paste(dir . "edf", , sep = ""), include.dirs = FALSE, pattern <- patterns[i])
+files <- list.files(paste(dir, "edf", sep = ""), include.dirs = FALSE, pattern <- ".edf")
+if (length(files) != 79) {
+  stop(
+  "Download to `edf` directory 79 EDF files of neonatal EEG recordings from https://zenodo.org/record/4940267. 
+  See also `__read_me__.txt` file.
+  "
+)
+}
+
 
 # Symbols of human experts
 we <- c( "A", "B", "C")
