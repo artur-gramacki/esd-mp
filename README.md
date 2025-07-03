@@ -9,8 +9,8 @@ by *Mateusz Kunik & Artur Gramacki*
 e-mails:  m.kunik@issi.uz.zgora.pl, a.gramacki@ck.uz.zgora.pl
 
 A complete repository consists of:
-1. R and Python source files for 
-2. Raw EDF files and CSV annotation files available at https://zenodo.org/record/4940267 (size about 4GB)
+1. R and Python source files for generating input files for neural network (hdf5 files). All the required scripts and other files are stored in the `edt_to_hdf5` directory. You should start by running the `__RUN__.R` file from the `edf_to_hdf5/R` directory. This directory in RStudio must be the current directory. NOTE: the entire procedure for generating `hdf5` files takes a very long time, especially the `db_to_Rdata.R` script can take up to 2-3 days to execute :-( TODO: in the future we plan to rewrite this script in a low-level language (C, C++, Java) to shorten this execution time. However, for testing, there is no need to generate `hdf5` files from scratch. The `data` directory contains links to the files already generated.
+2. Python scripts for deep learning tasks.  All the required scripts are stored in the `sripts` directory.
 
 
 In case of problems, the authors declare the necessary help for potential researchers.
