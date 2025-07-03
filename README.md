@@ -1,4 +1,4 @@
-# Epileptic-Seizure-Detection-by-Matching-Pursuit
+# esd-mp
 
 This is the Electronic Supplements for the paper:
 
