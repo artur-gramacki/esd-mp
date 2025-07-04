@@ -15,7 +15,7 @@
 #  http://www.r-project.org/Licenses/
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# --- IMPORTANT NOTE ---
+# --- IMPORTANT NOTE 1 ---
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Before starting, download the dataset of neonatal EEG recordings to the 'edf' directory.  
 # These are available at https://zenodo.org/record/4940267. 
@@ -23,9 +23,10 @@
 # The EDF files are approximately 4GB in size.  
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# --- IMPORTANT NOTE ---
+# --- IMPORTANT NOTE 2 ---
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+# Before starting, make sure that the 'edf_to_hdf5/R' directory is the current direcory,
+# as returned from the getwd() function.
 
 # ///////////////////////////////////////////////////////////////////////////////////////////
 # Uncomment if you are sure you want to remove the given directories
