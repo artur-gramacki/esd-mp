@@ -20,22 +20,22 @@
 
 dir <- "../"
 
-unlink(paste(dir, 'working/', sep = ""), recursive = TRUE)
-dir.create(paste(dir, 'working/', sep = ""))
-dir.create(paste(dir, 'working/aux_files', sep = ""))
-dir.create(paste(dir, 'working/bin_files', sep = ""))
-dir.create(paste(dir, 'working/bin_files/eA_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/bin_files/eB_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/bin_files/eC_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/hdf5_files', sep = ""))
-dir.create(paste(dir, 'working/sqlitedb_files', sep = ""))
-dir.create(paste(dir, 'working/sqlitedb_files/eA_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/sqlitedb_files/eB_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/sqlitedb_files/eC_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/tf_maps', sep = ""))
-dir.create(paste(dir, 'working/tf_maps/eA_w10_c20_64_64', sep = ""))
-dir.create(paste(dir, 'working/tf_maps/eB_w10_c20_64_64', sep = ""))
-dir.create(paste(dir, 'working/tf_maps/eC_w10_c20_64_64', sep = ""))
+# unlink(paste(dir, 'working/', sep = ""), recursive = TRUE)
+# dir.create(paste(dir, 'working/', sep = ""))
+# dir.create(paste(dir, 'working/aux_files', sep = ""))
+# dir.create(paste(dir, 'working/bin_files', sep = ""))
+# dir.create(paste(dir, 'working/bin_files/eA_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/bin_files/eB_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/bin_files/eC_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/hdf5_files', sep = ""))
+# dir.create(paste(dir, 'working/sqlitedb_files', sep = ""))
+# dir.create(paste(dir, 'working/sqlitedb_files/eA_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/sqlitedb_files/eB_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/sqlitedb_files/eC_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/tf_maps', sep = ""))
+# dir.create(paste(dir, 'working/tf_maps/eA_w10_c20_64_64', sep = ""))
+# dir.create(paste(dir, 'working/tf_maps/eB_w10_c20_64_64', sep = ""))
+# dir.create(paste(dir, 'working/tf_maps/eC_w10_c20_64_64', sep = ""))
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # --- IMPORTANT NOTE ---
