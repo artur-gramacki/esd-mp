@@ -14,6 +14,19 @@
 #  A copy of the GNU General Public License is available at
 #  http://www.r-project.org/Licenses/
 
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# --- IMPORTANT NOTE ---
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Before starting, download the dataset of neonatal EEG recordings to the 'edf' directory.  
+# These are available at https://zenodo.org/record/4940267. 
+# There are 79 EDF files and 3 CSV annotations files. 
+# The EDF files are approximately 4GB in size.  
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# --- IMPORTANT NOTE ---
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 # ///////////////////////////////////////////////////////////////////////////////////////////
 # Uncomment if you are sure you want to remove the given directories
 # ///////////////////////////////////////////////////////////////////////////////////////////
@@ -36,14 +49,6 @@ dir <- "../"
 # dir.create(paste(dir, 'working/tf_maps/eA_w10_c20_64_64', sep = ""))
 # dir.create(paste(dir, 'working/tf_maps/eB_w10_c20_64_64', sep = ""))
 # dir.create(paste(dir, 'working/tf_maps/eC_w10_c20_64_64', sep = ""))
-
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# --- IMPORTANT NOTE ---
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# Before starting, download the dataset of neonatal EEG recordings to the 'edf' directory.  
-# These are available at https://zenodo.org/record/4940267. 
-# There are 79 EDF files and 3 CSV annotations files. 
-# The EDF files are approximately 4GB in size.  
 
 source("edf_to_bin.R")
 source("bin_to_db.R")
