@@ -17,13 +17,18 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # --- IMPORTANT NOTE 1 ---
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# All codes were run and tested in version 4.4.1
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# --- IMPORTANT NOTE 2 ---
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Before starting, download the dataset of neonatal EEG recordings to the 'edf' directory.  
 # These are available at https://zenodo.org/record/4940267. 
 # There are 79 EDF files and 3 CSV annotations files. 
 # The EDF files are approximately 4GB in size.  
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# --- IMPORTANT NOTE 2 ---
+# --- IMPORTANT NOTE 3 ---
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Before starting, make sure that the 'edf_to_hdf5/R' directory is the current direcory,
 # as returned from the getwd() function.
@@ -34,22 +39,22 @@
 
 dir <- "../"
 
-# unlink(paste(dir, 'working/', sep = ""), recursive = TRUE)
-# dir.create(paste(dir, 'working/', sep = ""))
-# dir.create(paste(dir, 'working/aux_files', sep = ""))
-# dir.create(paste(dir, 'working/bin_files', sep = ""))
-# dir.create(paste(dir, 'working/bin_files/eA_w10_c20', sep = ""))
-# dir.create(paste(dir, 'working/bin_files/eB_w10_c20', sep = ""))
-# dir.create(paste(dir, 'working/bin_files/eC_w10_c20', sep = ""))
-# dir.create(paste(dir, 'working/hdf5_files', sep = ""))
-# dir.create(paste(dir, 'working/sqlitedb_files', sep = ""))
-# dir.create(paste(dir, 'working/sqlitedb_files/eA_w10_c20', sep = ""))
-# dir.create(paste(dir, 'working/sqlitedb_files/eB_w10_c20', sep = ""))
-# dir.create(paste(dir, 'working/sqlitedb_files/eC_w10_c20', sep = ""))
-# dir.create(paste(dir, 'working/tf_maps', sep = ""))
-# dir.create(paste(dir, 'working/tf_maps/eA_w10_c20_64_64', sep = ""))
-# dir.create(paste(dir, 'working/tf_maps/eB_w10_c20_64_64', sep = ""))
-# dir.create(paste(dir, 'working/tf_maps/eC_w10_c20_64_64', sep = ""))
+unlink(paste(dir, 'working/', sep = ""), recursive = TRUE)
+dir.create(paste(dir, 'working/', sep = ""))
+dir.create(paste(dir, 'working/aux_files', sep = ""))
+dir.create(paste(dir, 'working/bin_files', sep = ""))
+dir.create(paste(dir, 'working/bin_files/eA_w10_c20', sep = ""))
+dir.create(paste(dir, 'working/bin_files/eB_w10_c20', sep = ""))
+dir.create(paste(dir, 'working/bin_files/eC_w10_c20', sep = ""))
+dir.create(paste(dir, 'working/hdf5_files', sep = ""))
+dir.create(paste(dir, 'working/sqlitedb_files', sep = ""))
+dir.create(paste(dir, 'working/sqlitedb_files/eA_w10_c20', sep = ""))
+dir.create(paste(dir, 'working/sqlitedb_files/eB_w10_c20', sep = ""))
+dir.create(paste(dir, 'working/sqlitedb_files/eC_w10_c20', sep = ""))
+dir.create(paste(dir, 'working/tf_maps', sep = ""))
+dir.create(paste(dir, 'working/tf_maps/eA_w10_c20_64_64', sep = ""))
+dir.create(paste(dir, 'working/tf_maps/eB_w10_c20_64_64', sep = ""))
+dir.create(paste(dir, 'working/tf_maps/eC_w10_c20_64_64', sep = ""))
 
 source("edf_to_bin.R")
 source("bin_to_db.R")
@@ -63,7 +68,7 @@ source("my_custom_palette.R")
 # Display time-frequency map on the screen
 out <- mp2tf(
   SQLiteFile = "example.db", 
-  channel = 1, 
+  channel = 12, 
   mode = "sqrt", 
   freqDivide = 4,
   increaseFactor = 16,
@@ -78,7 +83,7 @@ out <- mp2tf(
 # Save time-frequency map to file
 out <- mp2tf(
   SQLiteFile = "example.db", 
-  channel = 1, 
+  channel = 12, 
   mode = "sqrt", 
   freqDivide = 4,
   increaseFactor = 16,
@@ -94,7 +99,7 @@ out <- mp2tf(
 # Save time-frequency map to RData file
 out <- mp2tf(
   SQLiteFile = "example.db", 
-  channel = 1, 
+  channel = 12, 
   mode = "sqrt", 
   freqDivide = 4,
   increaseFactor = 16,
