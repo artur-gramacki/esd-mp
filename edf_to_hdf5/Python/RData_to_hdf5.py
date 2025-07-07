@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 #############################################################################################
 # Generate tensors with required dimensions.
 # 
+# 'data' variable format:
 # We arrange individual drawings into a 2D matrix
 #           ch1 ch2 ch3 ... ch18
 # chunk1      x   x   x       x 
@@ -90,7 +91,8 @@ def create_input_data (mask, image_directory):
             print(i + 1, "/", s)
     
     X = np.zeros((s, 18, n, n))
-        
+
+    # Convert 2D 'data' variable into 4D 'X' tensor
     for i in range(0, s):
         for j in range(0, 18):
             X[i,j,:,:] = data[i * n : (i + 1) * n, j * n: (j + 1) * n]
