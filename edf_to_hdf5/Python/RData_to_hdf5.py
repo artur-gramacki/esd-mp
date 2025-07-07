@@ -15,6 +15,16 @@ import matplotlib.pyplot as plt
 
 #############################################################################################
 # Generate tensors with required dimensions.
+# 
+# We arrange individual drawings into a 2D matrix
+#           ch1 ch2 ch3 ... ch18
+# chunk1      x   x   x       x 
+# chunk2      x   x   x       x
+# .
+# .
+# .
+# chunkN      x   x   x       x
+#
 #############################################################################################
 def create_input_data (mask, image_directory):
     
@@ -40,15 +50,23 @@ def create_input_data (mask, image_directory):
     
     data = np.zeros((n * s, n * 18))
     fileNames = []
-    
-    # File names end with movie 00001, movie 00002, etc.
-    # For example, files ending with file00001 contain all channels of a given fragment.
+
+    # Sample RData file name: 
+    # fns_eA_p03_w10c20_seq_0001_256Hz_ch01_64_64_file00001.RData 
+    # fs_eA_p01_w10c20_c01_seq_0001_256Hz_ch01_64_64_file00001.RData
+    # File names end with file00001, file00002, etc.
+    # For example, files ending with file00001 contain all channels of a given chunk.
     # fs - Filtered Seizure
     # fns - Filtered Non Seizure
     # Filtered - signals from EDF files are subjected to standard filtering:
     #     50Hz notch filter (48.5 Hz - 51.5 Hz)
     #     Low pass IIR Butterworth (30 Hz)
     #     High pass IIR Butterwoth(1 Hz)  
+    # p03 - patient number 3
+    # w10c20 - window size = 10 and number of contiguous chunks = 20
+    # seq_0001 - chunk's next number  
+    # c1 - chunk number 1
+    # 64_64 - t-f map resolution
     for i in range (0, s):    
         ff = 'file' + str(i + 1).rjust(5, '0')
         files = glob.glob(image_directory + mask + ff + '.Rdata', recursive = False)
