@@ -32,40 +32,72 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # --- IMPORTANT NOTE 3 ---
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# Before starting, make sure that the 'edf_to_hdf5/R' directory is the current direcory,
+# Before starting, make sure that the 'edf_to_hdf5/R' directory is the current directory,
 # as returned from the getwd() function.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# --- IMPORTANT NOTE 4 ---
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Set the correct path to pyton.exe executable file
 
 # ///////////////////////////////////////////////////////////////////////////////////////////
 # Uncomment if you are sure you want to remove the given directories
 # ///////////////////////////////////////////////////////////////////////////////////////////
 
 dir <- "../"
+python_dir <- "c:/Programy/miniconda3/"
 
-unlink(paste(dir, 'working/', sep = ""), recursive = TRUE)
-dir.create(paste(dir, 'working/', sep = ""))
-dir.create(paste(dir, 'working/aux_files', sep = ""))
-dir.create(paste(dir, 'working/bin_files', sep = ""))
-dir.create(paste(dir, 'working/bin_files/eA_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/bin_files/eB_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/bin_files/eC_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/hdf5_files', sep = ""))
-dir.create(paste(dir, 'working/sqlitedb_files', sep = ""))
-dir.create(paste(dir, 'working/sqlitedb_files/eA_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/sqlitedb_files/eB_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/sqlitedb_files/eC_w10_c20', sep = ""))
-dir.create(paste(dir, 'working/tf_maps', sep = ""))
-dir.create(paste(dir, 'working/tf_maps/eA_w10_c20_64_64', sep = ""))
-dir.create(paste(dir, 'working/tf_maps/eB_w10_c20_64_64', sep = ""))
-dir.create(paste(dir, 'working/tf_maps/eC_w10_c20_64_64', sep = ""))
+# unlink(paste(dir, 'working/', sep = ""), recursive = TRUE)
+# dir.create(paste(dir, 'working/', sep = ""))
+# dir.create(paste(dir, 'working/aux_files', sep = ""))
+# dir.create(paste(dir, 'working/bin_files', sep = ""))
+# dir.create(paste(dir, 'working/bin_files/eA_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/bin_files/eB_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/bin_files/eC_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/hdf5_files', sep = ""))
+# dir.create(paste(dir, 'working/sqlitedb_files', sep = ""))
+# dir.create(paste(dir, 'working/sqlitedb_files/eA_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/sqlitedb_files/eB_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/sqlitedb_files/eC_w10_c20', sep = ""))
+# dir.create(paste(dir, 'working/tf_maps', sep = ""))
+# dir.create(paste(dir, 'working/tf_maps/eA_w10_c20_64_64', sep = ""))
+# dir.create(paste(dir, 'working/tf_maps/eB_w10_c20_64_64', sep = ""))
+# dir.create(paste(dir, 'working/tf_maps/eC_w10_c20_64_64', sep = ""))
 
+# After completing this script:
+# 1. working/aux_files directory should contain 9 files
+# 2. working/bin_files/eA_w10_c20 directory should contain 72 files
+# 3. working/bin_files/eB_w10_c20 directory should contain 82 files
+# 4. working/bin_files/eC_w10_c20 directory should contain 66 files
 source("edf_to_bin.R")
+``
+# After completing this script:
+# 1. working/sqlitedb_files/eA_w10_c20 directory should contain 72 files
+# 2. working/sqlitedb_files/eB_w10_c20 directory should contain 82 files
+# 3. working/sqlitedb_files/eC_w10_c20 directory should contain 66 files
 source("bin_to_db.R")
+
+# After completing this script:
+# 1. working/tf_maps/eA_w10_c20_64_64 directory should contain 1296 files
+# 2. working/tf_maps/eB_w10_c20_64_64 directory should contain 1476 files
+# 3. working/tf_maps/eC_w10_c20_64_64 directory should contain 1188 files
+# 4. working/tf_maps directory should contain 12 log/diagnostic files
 source("db_to_RData.R")
+
+# After completing this script:
+# 1. working/hdf5_files directory should contain 4 files:
+# eABC_w10_c20_64_64_XY.hdf5
+# eA_w10_c20_64_64.hdf5
+# eB_w10_c20_64_64.hdf5
+# eC_w10_c20_64_64.hdf5
+run_command  <- paste(python_dir, "python.exe ", " ../Python/RData_to_hdf5.py", sep = "")
+system(run_command)
 
 # ///////////////////////////////////////////////////////////////////////////////////////////
 # Some examples
 
 source("my_custom_palette.R")
+source("funs.R")
 
 # Display time-frequency map on the screen
 out <- mp2tf(
@@ -122,5 +154,5 @@ graphics::image(
   y = seq(0, 32, length.out = 64), 
   z = tf.matrix, 
   col = my_custom_palette,
-  xlab = "t [s]",
-  ylab = "f [Hz]" )
+  xlab = "Time [s]",
+  ylab = "Frequency [Hz]" )
