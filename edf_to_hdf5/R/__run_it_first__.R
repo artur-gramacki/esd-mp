@@ -70,7 +70,7 @@ python_dir <- "c:/Programy/miniconda3/"
 # 3. working/bin_files/eB_w10_c20 directory should contain 82 files
 # 4. working/bin_files/eC_w10_c20 directory should contain 66 files
 source("edf_to_bin.R")
-``
+
 # After completing this script:
 # 1. working/sqlitedb_files/eA_w10_c20 directory should contain 72 files
 # 2. working/sqlitedb_files/eB_w10_c20 directory should contain 82 files
@@ -84,12 +84,12 @@ source("bin_to_db.R")
 # 4. working/tf_maps directory should contain 12 log/diagnostic files
 source("db_to_RData.R")
 
-# After completing this script:
+# After completing the below command:
 # 1. working/hdf5_files directory should contain 4 files:
-# eABC_w10_c20_64_64_XY.hdf5
-# eA_w10_c20_64_64.hdf5
-# eB_w10_c20_64_64.hdf5
-# eC_w10_c20_64_64.hdf5
+#   eABC_w10_c20_64_64_XY.hdf5
+#   eA_w10_c20_64_64.hdf5
+#   eB_w10_c20_64_64.hdf5
+#   eC_w10_c20_64_64.hdf5
 run_command  <- paste(python_dir, "python.exe ", " ../Python/RData_to_hdf5.py", sep = "")
 system(run_command)
 
