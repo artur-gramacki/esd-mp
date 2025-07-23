@@ -66,19 +66,19 @@ python_dir <- "c:/Programy/miniconda3/"
 
 # After completing this script:
 # 1. working/aux_files directory should contain 9 files
-# 2. working/bin_files/eA_w10_c20 directory should contain 72 files
+# 2. working/bin_files/eA_w10_c20 directory should contain 48 files
 # 3. working/bin_files/eB_w10_c20 directory should contain 82 files
 # 4. working/bin_files/eC_w10_c20 directory should contain 66 files
 source("edf_to_bin.R")
 
 # After completing this script:
-# 1. working/sqlitedb_files/eA_w10_c20 directory should contain 72 files
+# 1. working/sqlitedb_files/eA_w10_c20 directory should contain 48 files
 # 2. working/sqlitedb_files/eB_w10_c20 directory should contain 82 files
 # 3. working/sqlitedb_files/eC_w10_c20 directory should contain 66 files
 source("bin_to_db.R")
 
 # After completing this script:
-# 1. working/tf_maps/eA_w10_c20_64_64 directory should contain 1296 files
+# 1. working/tf_maps/eA_w10_c20_64_64 directory should contain 864 files
 # 2. working/tf_maps/eB_w10_c20_64_64 directory should contain 1476 files
 # 3. working/tf_maps/eC_w10_c20_64_64 directory should contain 1188 files
 # 4. working/tf_maps directory should contain 12 log/diagnostic files
