@@ -1,0 +1,41 @@
+model_name : classifier
+data_version: eC_w10_c20_64_64_NEW
+
+data_parameters:
+  seed: 0
+  data_fraction: 0.2
+  split_proportions: [0.8, 0.1, 0.1]
+
+  # Dataloaders parameters
+  batch_size: 64
+  num_workers: 0
+  pin_memory: True
+  
+  # Augmentation
+  shuffle_prob: 1
+  invert_prob: 0.2
+
+# Training hyperparameters
+model_parameters:
+  device: cuda
+  in_channels: 1
+  num_classes: 2
+  dropout: 0.1
+
+  num_epochs: 10
+
+  optimizer: Adam
+  learning_rate: 0.0002
+  weight_decay: 0.0001
+
+  lr_scheduler: step
+  step_size: 100
+  gamma: 1
+
+  # Parameters for callbacks
+  init_stopper_patience: 5
+
+  early_stopper_patience: 10
+  early_stopper_min_delta: 1
+
+  maximize: False
