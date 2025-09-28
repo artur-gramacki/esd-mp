@@ -1,6 +1,6 @@
 This following directory structure will be create/recrete 
 after running the __run_it_first__.R script 
-
+```
 ├───aux_files
 ├───bin_files
 │   ├───eA_w10_c20
@@ -20,4 +20,4 @@ after running the __run_it_first__.R script
     ├───eA_w10_c20_64_64
     ├───eB_w10_c20_64_64
     └───eC_w10_c20_64_64
-
+```
