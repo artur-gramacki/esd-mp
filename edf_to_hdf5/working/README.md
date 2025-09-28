@@ -2,15 +2,12 @@ This following directory structure can be create/recrete
 in the file __run_it_first__.R script 
 
 D:.
-<<<<<<< HEAD
 aux_files
 bin_files
 │   ├───eA_w10_c20
-=======
 ├───aux_files
 ├───bin_files 
 │   ├───eA_w10_c20 
->>>>>>> 0c73ca8ec9df1957c28901f2825b7d9555f0e192
 │   ├───eB_w10_c20
 │   └───eC_w10_c20
 ├───hdf5_files
