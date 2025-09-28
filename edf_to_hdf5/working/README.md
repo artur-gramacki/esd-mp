@@ -1,0 +1,1 @@
+This directory structure can be create/recrete in the file __run_it_first__.R script 
