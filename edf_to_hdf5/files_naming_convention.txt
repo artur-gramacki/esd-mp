@@ -1,0 +1,84 @@
+aux_files        - auxilar diagnostic files generated with edf_to_bin.R script
+bin_files        - stores files generated with edf_to_bin.R script
+hdf5_files       - stores files generated with RData_to_hdf5.py
+hdf5_files_STFT  - stores files generated with RData_to_hdf5.py
+sqlitedb_files   - stores files generated with bin_to_db.R script
+tf_maps          - stores files generated with db_to_RData.R script 
+tf_maps_STFT     - stores files generated with bin_to_RDataSTFT.R script 
+
+=================================================================================
+naming convention for directories:
+=================================================================================
+example dir name: eA_w10_c20
+----------------------------
+eA      - expert A
+w10c20  - window length = 10s, number o chunks = 20
+
+
+example dir name: eA_w10_c20_64_64
+----------------------------------
+eA      - expert A
+w10c20  - window length = 10s, number o chunks = 20
+64_64   - TF map resolution in pixels
+
+=================================================================================
+naming convention for files:
+=================================================================================
+*.bin files   - input data for empi.exe program (see README.md for details)
+*.db files    - outputs from empi.exe program (in SQLite format)
+*.RData files - TF maps saved in R's internal format
+*.hdf5 files  - inputs for deep learning, store tensors of size n × 18 × 64 × 64
+
+
+fns_eA_p10_w10c20_seq_0001_256Hz.bin
+------------------------------------
+fns      - filtered non seizure
+eA       - expert A
+p10, p04 - patient #10
+w10c20   - window length = 10s, number o chunks = 20
+seq_0001 - sample sequence number
+256Hz    - sampling frequency
+
+
+fs_eA_p04_w10c20_c01_seq_0001_256Hz.bin
+---------------------------------------
+fs       - filtered seizure
+eA       - expert A
+p04      - patient #04
+w10c20   - window length = 10s, number o chunks = 20
+c01      - chunk #01
+seq_0001 - sample sequence number
+256Hz    - sampling frequency
+
+
+fns_eA_p10_w10c20_seq_0001_256Hz.db
+fs_eA_p04_w10c20_c01_seq_0001_256Hz.db
+--------------------------------------
+as in .bin files
+
+
+fns_eA_p10_w10c20_seq_0001_256Hz_ch01_64_64_file00001.RData
+-----------------------------------------------------------
+fns       - filtered non seizure
+eA        - expert A
+p10       - patient #10
+w10c20    - window length = 10s, number o chunks = 20
+seq_0001  - sample sequence number
+256Hz     - sampling frequency
+ch01      - EEG channel #01
+64_64     - TF map resolution in pixels
+file00001 - .db file sequence number
+
+
+fs_eA_p04_w10c20_c01_seq_0001_256Hz_ch01_64_64_file00001.RData
+--------------------------------------------------------------
+fs - filtered seizure
+eA        - expert A
+p04       - patient #04
+w10c20    - window length = 10s, number o chunks = 20
+c01       - chunk #01
+seq_0001  - sample sequence number
+256Hz     - sampling frequency
+ch01      - EEG channel #01
+64_64     - TF map resolution in pixels
+file00001 - .db file sequence number
