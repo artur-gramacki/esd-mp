@@ -10,24 +10,16 @@ import numpy as np
 import os
 import sys
 import glob
-import pyreadr
+import pyreadr  
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, StratifiedKFold, KFold
 
-#############################################################################################
-# Generate tensors with required dimensions.
-# 
-# 'data' variable format:
-# We arrange individual drawings into a 2D matrix
-#           ch1 ch2 ch3 ... ch18
-# chunk1      x   x   x       x 
-# chunk2      x   x   x       x
-# .
-# .
-# .
-# chunkN      x   x   x       x
-#
-#############################################################################################
-def create_input_data (mask, image_directory):
+print(os.getcwd())
+
+def create_input_data(mask, image_directory):
+    '''
+    Generate tensors with required dimensions.
+    '''
     
     # mask: 'fs*' lub 'fns*'
     f = glob.glob(image_directory + mask + '.RData', recursive = False)
@@ -38,9 +30,9 @@ def create_input_data (mask, image_directory):
     df = result["tf.matrix"]
     size = df.shape
     
-    print("Number of files:", len(f))
-    print("Number of samples:", s)
-    print("Figure resolution:", size[0], "x", size[1])
+    print("Number of files:", len(f), flush = True)
+    print("Number of samples:", s, flush = True)
+    print("Figure resolution:", size[0], "x", size[1], flush = True)
     
     # we assume that our images are always square, there is no need 
     # for them to be non-square, it doesn't change anything substantively
@@ -51,30 +43,18 @@ def create_input_data (mask, image_directory):
     
     data = np.zeros((n * s, n * 18))
     fileNames = []
-
-    # Sample RData file names: 
-    # fns_eA_p03_w10c20_seq_0001_256Hz_ch01_64_64_file00001.RData 
-    # fs_eA_p01_w10c20_c01_seq_0001_256Hz_ch01_64_64_file00001.RData
-    #
-    # File names end with file00001, file00002, etc.
-    # For example, files ending with file00001 contain all channels of a given chunk.
-    #
+    
+    # File names end with 'file00001', 'file00002', etc.
+    # For example, files ending with file00001 contain all channels of a given fragment.
     # fs - Filtered Seizure
     # fns - Filtered Non Seizure
     # Filtered - signals from EDF files are subjected to standard filtering:
     #     50Hz notch filter (48.5 Hz - 51.5 Hz)
     #     Low pass IIR Butterworth (30 Hz)
     #     High pass IIR Butterwoth(1 Hz)  
-    #
-    # p03 - patient number 3
-    # w10c20 - window size = 10 and number of contiguous chunks = 20
-    # seq_0001 - chunk's next number  
-    # c1 - chunk number 1
-    # 64_64 - t-f map resolution
-    # 256Hz - sampling frequency in edf files
     for i in range (0, s):    
         ff = 'file' + str(i + 1).rjust(5, '0')
-        files = glob.glob(image_directory + mask + ff + '.Rdata', recursive = False)
+        files = glob.glob(image_directory + mask + ff + '.RData', recursive = False)
         for j in range(0, len(files)):
             img = pyreadr.read_r(files[j])
             df = img["tf.matrix"]
@@ -88,11 +68,10 @@ def create_input_data (mask, image_directory):
             fileNames.append(os.path.basename(files[j]))
 
         if (i + 1) % 10 == 0:
-            print(i + 1, "/", s)
+            print(i + 1, "/", s, flush = True)
     
     X = np.zeros((s, 18, n, n))
-
-    # Convert 2D 'data' variable into 4D 'X' tensor
+        
     for i in range(0, s):
         for j in range(0, 18):
             X[i,j,:,:] = data[i * n : (i + 1) * n, j * n: (j + 1) * n]
@@ -109,86 +88,107 @@ def create_input_data (mask, image_directory):
     # (batch_size, spatial_dim1, spatial_dim2, spatial_dim3, channels)
     X = np.expand_dims(X, axis = 4)        
     
-    print('\n')
-    print("=====================================================")
-    print('X:', X.shape)
-    print('Y:', Y.shape)
-    print("=====================================================")
-    print('\n')
+    print('\n', flush = True)
+    print("=====================================================", flush = True)
+    print('X:', X.shape, flush = True)
+    print('Y:', Y.shape, flush = True)
+    print("=====================================================", flush = True)
+    print('\n', flush = True)
 
     return(X, Y, fileNames)      
-  
 
-dir = '../'
-
-names = ["eA_w10_c20_64_64", "eB_w10_c20_64_64", "eC_w10_c20_64_64"]
-
-for i in range(3):
-    image_directory = dir + 'working/tf_maps/' + names[i] + "/"
-
-    x_fs, y_fs, fnames_fs = create_input_data(mask = 'fs*', image_directory = image_directory)
-    x_fns, y_fns, fnames_fns = create_input_data(mask = 'fns*', image_directory = image_directory)
-
-    X = np.concatenate((x_fns, x_fs))
-    Y = np.concatenate((y_fns, y_fs))
-    fileNames = fnames_fns + fnames_fs
-    Y_encoded = np.concatenate((y_fns, y_fs))
-
-    # Converting Y to one-hot-encoding
-    Y_encoded = np.ones((Y.size, Y.max() + 1), dtype = np.byte)
-    Y_encoded[np.arange(Y.size), Y] = 0 
-
-
-    # Saving to hdf5
-    with h5py.File(dir + 'working/hdf5_files/' + names[i] + '.hdf5', 'w') as f:
+def create_hdf5_files(hdf5_loc, tf_maps_loc):
+    '''
+    Generate hdf5 files.
+    '''
+    
+    dir = '../'
+    
+    names = ["eA_w10_c20_64_64", "eB_w10_c20_64_64", "eC_w10_c20_64_64"]
+    
+    for i in range(3):
+        image_directory = dir + 'working/' + tf_maps_loc + "/" + names[i] + "/"
+    
+        x_fs, y_fs, fnames_fs = create_input_data(mask = 'fs*', image_directory = image_directory)
+        x_fns, y_fns, fnames_fns = create_input_data(mask = 'fns*', image_directory = image_directory)
+    
+        X = np.concatenate((x_fns, x_fs))
+        Y = np.concatenate((y_fns, y_fs))
+        fileNames = fnames_fns + fnames_fs
+        Y_encoded = np.concatenate((y_fns, y_fs))
+    
+        # Converting Y to one-hot-encoding
+        Y_encoded = np.ones((Y.size, Y.max() + 1), dtype = np.byte)
+        Y_encoded[np.arange(Y.size), Y] = 0 
+    
+    
+        # Saving to hdf5
+        with h5py.File(dir + 'working/' + hdf5_loc + "/" +  names[i] + '.hdf5', 'w') as f:
+            f.create_dataset('X', data = X)
+            f.create_dataset('Y', data = Y)
+            f.create_dataset('Y_encoded', data = Y_encoded)
+            f.create_dataset('fileNames', data = fileNames)  
+            
+       
+    with h5py.File(dir + 'working/' + hdf5_loc + "/" + names[0] + '.hdf5',  'r') as f:
+        XA = f["X"][:]
+        YA = f["Y"][:]
+        
+    with h5py.File(dir + 'working/' + hdf5_loc + "/" + names[1] + '.hdf5',  'r') as f:
+        XB = f["X"][:]
+        YB = f["Y"][:]
+    
+    with h5py.File(dir + 'working/' + hdf5_loc + "/" + names[2] + '.hdf5',  'r') as f:
+        XC = f["X"][:]
+        YC = f["Y"][:]
+        
+    X = np.concatenate((XA, XB, XC))
+    Y = np.concatenate((YA, YB, YC))
+    
+    print(X.shape, flush = True)
+    print(Y.shape, flush = True)  
+    
+    del XA
+    del XB
+    del XC
+    del YA
+    del YB
+    del YC  
+    
+    with h5py.File(dir + 'working/' + hdf5_loc + "/" + 'eABC_w10_c20_64_64_XY.hdf5', 'w') as f:
         f.create_dataset('X', data = X)
         f.create_dataset('Y', data = Y)
-        f.create_dataset('Y_encoded', data = Y_encoded)
-        f.create_dataset('fileNames', data = fileNames)  
         
-   
-with h5py.File(dir + 'working/hdf5_files/' + names[0] + '.hdf5',  'r') as f:
-    XA = f["X"][:]
-    YA = f["Y"][:]
+    del X
+    del Y    
     
-with h5py.File(dir + 'working/hdf5_files/' + names[1] + '.hdf5',  'r') as f:
-    XB = f["X"][:]
-    YB = f["Y"][:]
+    print('done', flush = True)
 
-with h5py.File(dir + 'working/hdf5_files/' + names[2] + '.hdf5',  'r') as f:
-    XC = f["X"][:]
-    YC = f["Y"][:]
-    
-X = np.concatenate((XA, XB, XC))
-Y = np.concatenate((YA, YB, YC))
+#############################################################################################
+# Run the generators
+#############################################################################################    
+# for generating hdf5 files based on Matching Pursuit    
+create_hdf5_files(hdf5_loc = "hdf5_files", tf_maps_loc = "tf_maps")
 
-print(X.shape)
-print(Y.shape)  
+# for generating hdf5 files based on Short Time Fourier Transform
+create_hdf5_files(hdf5_loc = "hdf5_files_STFT", tf_maps_loc = "tf_maps_STFT")
 
-del XA
-del XB
-del XC
-del YA
-del YB
-del YC  
-
-with h5py.File(dir + 'working/hdf5_files/eABC_w10_c20_64_64_XY.hdf5', 'w') as f:
-    f.create_dataset('X', data = X)
-    f.create_dataset('Y', data = Y)
-    
-del X
-del Y    
-
-print('done')
 
 #############################################################################################
 # Read and plot a sample picture
 #############################################################################################
-with h5py.File(dir + 'working/hdf5_files/eABC_w10_c20_64_64_XY.hdf5', 'r') as f:
-    X = f["X"][:]
-    Y = f["Y"][:]
+with h5py.File("../" + 'working/' + "hdf5_files/" +  'eABC_w10_c20_64_64_XY.hdf5', 'r') as f:
+    X_MP = f["X"][:]
+    Y_MP = f["Y"][:]
 
-plt.imshow(X[0,0,:,:,:])
-plt.imshow(X[1,17,:,:,:])
+plt.imshow(X_MP[0,0,:,:,:])
+plt.imshow(X_MP[195,17,:,:,:]) 
 
+
+with h5py.File("../" + 'working/' + "hdf5_files_STFT/" +  'eABC_w10_c20_64_64_XY.hdf5', 'r') as f:
+    X_STFT = f["X"][:]
+    Y_STFT = f["Y"][:]
+
+plt.imshow(X_STFT[0,0,:,:,:])
+plt.imshow(X_STFT[195,17,:,:,:]) 
 
