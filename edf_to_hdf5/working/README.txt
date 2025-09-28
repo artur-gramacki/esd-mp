@@ -1,5 +1,6 @@
 This following directory structure will be create/recrete 
 after running the __run_it_first__.R script 
+ [__run_it_first__R](https://github.com/artur-gramacki/esd-mp/blob/main/edf_to_hdf5/R/__run_it_first__.R)
 
 ├───aux_files
 ├───bin_files
