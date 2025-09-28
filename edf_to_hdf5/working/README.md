@@ -1,8 +1,7 @@
 This following directory structure can be create/recrete 
 in the file __run_it_first__.R script 
 
-├───aux_files
-
+├───aux_files 
 ├───bin_files
 
 │   ├───eA_w10_c20
