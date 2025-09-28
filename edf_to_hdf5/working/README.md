@@ -3,7 +3,7 @@ in the file __run_it_first__.R script
 
 D:.
 aux_files
-├───bin_files
+bin_files
 │   ├───eA_w10_c20
 │   ├───eB_w10_c20
 │   └───eC_w10_c20
