@@ -1,5 +1,5 @@
-This following directory structure can be create/recrete 
-in the file __run_it_first__.R script 
+This following directory structure will be create/recrete 
+after running the __run_it_first__.R script 
 
 ├───aux_files
 ├───bin_files
