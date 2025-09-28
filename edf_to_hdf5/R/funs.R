@@ -678,29 +678,24 @@ mp2tf <- function(
   reportFile = "report",
   plotSignals = TRUE) {
   
-  # SQLiteFile         - plik, który "schodzi" z programu empi
-  # channel            - który kanał z pliku sqlite obrabiać
-  # mode               - "sqrt", "log", "linear" (b. podobnie jak w Svarog)
-  # freqDivide         - ile razy od góry ograniczyć wyświetlaną częstotliwość. Np. Gdy f=256Hz
-  #                      to maksymalna częstotliwość jest f/2 (reguła Nyquista) a po ograniczeniu
-  #                      mamy f/2/freqDivide
-  # increaseFactor     - współczynnik zwiększenie ilości pikseli w osi f. Robimy tak, gdyż 
-  #                      po ograniczeniu od góry częstotliwości parametrem freqDivide w blobach
-  #                      zaczyna byc widać pikselizację, co nie wygląda ładnie.
-  #                      Można podawać dowolne wartości ale najbardziej sensowne są liczby
-  #                      całkowite dodanie (np. 2, 4, 5, 8)
-  # displayCrosses     - czy w środkach atomów maja być wyświetlone małe krzyżyki
-  # palette            - paleta z listy zwracanej przez hcl.pals() 
-  #                      lub 'my custom palette' (dale kolory bardo podobne do Svarog-a)
-  # rev                - rev param in hcl.colors
-  # outMode            - 'plot': rysuje na ekranie, 
-  #                      'file': zapisuje obraz na pliku 'fileName'
-  #                      'RData': zapisuje dane potrzebne do utworzenia rysunku w rozmiarze fileSize
-  #                      (w pliku 'fileName' z rozszerzenie .RData)
-  #                      'console': tylko do pliku zapisuje podstawowe dane odczytane z plików db
-  # reportFile         - nazwa pliku, w który zapisane będą dane o ilości atomów powstałych
-  #                      w wyniku działania programu empi.exe
-  # plotSignals        - czy mają być wyświetlane też sygnały 'original' oraz 'reconstructed'
+  # SQLiteFile         - the output file name from the empi.exe program
+  # channel            - channel from the sqlite file to process
+  # mode               - "sqrt", "log", "linear" 
+  # freqDivide         - for setting frequency range. For example, when sampling frequency is f=256Hz, 
+  #                      the maximum frequency is f/2 (Nyquist rule) and the limited the frequency 
+  #                      is  f / 2 / freqDivide
+  # increaseFactor     - factor of increasing the number of pixels in the f-axis, 
+  #                      the most sensible are non-negative integers (e.g. 2, 4, 5, 8)
+  # displayCrosses     - whether small crosses should be displayed in the centers of atoms
+  # palette            - palette from the list returned by hcl.pals() function or the string 'my custom palette' 
+  # rev                - rev param in hcl.colors() function
+  # outMode            - 'plot': draws a TF map on the screen 
+  #                      'file': saves a TF map to file 'fileName' (as png file)
+  #                      'RData': saves the TF map of 'fileSize' in the 'fileName' (as R's matrix)
+  #                       'console': writes basic data read from db files to a file
+  # reportFile         - name of the file in which the data on the number of atoms created as a result 
+  #                      of running the empi.exe program will be saved
+  # plotSignals        - whether the 'original' and 'reconstructed' signals should also be displayed
   
   if (outMode != "plot" & outMode != "file" & outMode != "RData" & outMode != "console")
     stop("\n--> Incorrect value for 'outMode' parameter' <--")
@@ -923,15 +918,14 @@ mp2tf <- function(
     # Usuwamy rozszerzenie
     fileName <- paste(tools::file_path_sans_ext(fileName), ".RData", sep = "")
     
-    rr <- raster::raster(nrow = ncol(zz), ncol = nrow(zz)) # tu musi właśnie być odwrotnie
+    rr <- raster::raster(nrow = ncol(zz), ncol = nrow(zz)) # # this is how it should be: nrow = ncol(zz), ncol = nrow(zz)
     rr[] <- t(zz)
     tt <- raster::raster(ncol = fileSize[1], nrow = fileSize[2])
     tt <- raster::resample(rr, tt)
     m2 <- matrix(tt@data@values, fileSize[1], fileSize[2])
-    #image(m2, col = col)
-    #range(m2)
-    # Przeskalowanie do zakresu 0-1
-    # Zabezpieczamy się, przed sytuacją, gdy w mianowniku pojawia się zero
+    # graphics::image(m2, col = col)
+    # Rescaling to the range 0-1
+    # Protect against a situation where a zero appears in the denominator
     if (max(m2) - min(m2) == 0) {
       tf.matrix <- matrix(0, fileSize[1], fileSize[2])  
     } else {
@@ -1041,7 +1035,7 @@ generate_RData_files <- function(
         format.str,
         ".png", sep = "")
       
-      out <- mp2tf(
+      mp2tf(
         SQLiteFile = paste(sqlite_source, files[i], ".db", sep = ""),
         channel = j,
         mode = "sqrt",

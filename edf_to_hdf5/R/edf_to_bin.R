@@ -20,10 +20,13 @@ dir = "../"
 
 # Check if edf files are already downloaded into the 'edf' dir.
 files <- list.files(paste(dir, "edf", sep = ""), include.dirs = FALSE, pattern <- ".edf")
-if (length(files) != 79) {
-  stop("Download to `edf` directory 79 EDF files of neonatal EEG recordings from https://zenodo.org/record/4940267.")
+if (length(files) == 0) {
+  stop(
+  "Download to `edf` directory 79 EDF files of neonatal EEG recordings from https://zenodo.org/record/4940267. 
+  See also `README.md` file.
+  "
+)
 }
-
 
 # Symbols of human experts
 we <- c( "A", "B", "C")
@@ -33,16 +36,17 @@ ann.f <- c("annotations_2017_A_fixed.csv",
           "annotations_2017_B.csv",
           "annotations_2017_C.csv")
 
-# infant IDs which have seizures 
+# infant IDs which have seizures(s: seizure)
 s.IDs <- c(1,4,5,7,9,11,13,14,15,16,17,19,20,21,22,25,31,34,36,38,39,40,41,44,47,50,51,52,62,63,66,67,69,71,73,75,76,77,78,79)
 # for testitng it's better to use only a subset
 s.IDs <- c(4)
 
-# infant IDs which are seizure free
+# infant IDs which are seizure free (ns: not seizure)
 ns.IDs <- c(3,10,18,27,28,29,30,32,35,37,42,45,48,49,53,55,57,58,59,60,70,72)
 # for testitng it's better to use only a subset
 ns.IDs <- c(10)
 
+# To ensure repeatable results
 my.seeds = c(42, 1024, 9999)
 
 timestamp()
