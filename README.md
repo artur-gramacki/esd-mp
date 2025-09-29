@@ -1,6 +1,6 @@
 # esd-mp
 
-This is the Electronic Supplements for the paper:
+This is the Electronic Supplement for the paper:
 
 > ## A deep learning epileptic seizure detection based on matching pursuit algorithm and its time-frequency graphical representation ##
 
