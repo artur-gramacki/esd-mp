@@ -13,7 +13,7 @@ A complete repository consists of:
 
 2. Python scripts for deep learning tasks. All the required scripts are stored in the [deep_learning](https://github.com/artur-gramacki/esd-mp/tree/main/deep_learning) directory.
 
-3. TODO
+3. Some Supplementary Materials are in the [db_to_Rdata.R](https://github.com/artur-gramacki/esd-mp/blob/main/edf_to_hdf5/R/db_to_Rdata.R)
 
 
 In case of problems, the authors declare the necessary help for potential researchers.
