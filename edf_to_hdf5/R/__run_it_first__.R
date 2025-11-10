@@ -1,4 +1,4 @@
-# file __run_it_first__.R
+# file __run_it_first__.R 
 # copyright (C) 2022-2025 Artur Gramacki and Jarosław Gramacki
 #
 #  This program is free software; you can redistribute it and/or modify
