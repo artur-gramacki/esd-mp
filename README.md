@@ -9,6 +9,7 @@ by *Mateusz Kunik & Artur Gramacki*
 e-mails:  m.kunik@issi.uz.zgora.pl, a.gramacki@ck.uz.zgora.pl
 
 Paper details: accepted for publication in the [International Journal of Applied Mathematics and Computer Science](https://www.amcs.uz.zgora.pl/?action=papers&issue=138)
+
 Download from https://www.amcs.uz.zgora.pl/?action=download&pdf=AMCS_2025_35_4_6.pdf or from [10.61822/amcs-2025-0044](http://dx.doi.org/10.61822/amcs-2025-0044)
 
 A complete repository consists of:
