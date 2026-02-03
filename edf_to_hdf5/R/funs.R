@@ -667,15 +667,19 @@ mp2tf <- function(
   mode = "sqrt",
   freqDivide = 1, 
   increaseFactor= 1,
+  shorteningFactor.x = 2,
+  shorteningFactor.y = 2,
   displayCrosses = TRUE,
-  grid = FALSE,
+  displayAtomNumbers = FALSE,
+  displayGrid = FALSE,
   crossesColor = "white",
   palette = 'Lajolla', 
   rev = TRUE,
-  outMode = "plot",
-  fileName = NA,
+  outMode = "file",
+  fileName = "sample.png",
   fileSize = c(512, 512),
   reportFile = "report",
+  drawEllipses = FALSE,
   plotSignals = TRUE) {
   
   # SQLiteFile         - the output file name from the empi.exe program
@@ -686,15 +690,21 @@ mp2tf <- function(
   #                      is  f / 2 / freqDivide
   # increaseFactor     - factor of increasing the number of pixels in the f-axis, 
   #                      the most sensible are non-negative integers (e.g. 2, 4, 5, 8)
+  # shorteningFactor.x - usually, for better visualization of atoms, a value of 2 will be appropriate 
+  # shorteningFactor.x - usually, for better visualization of atoms, a value of 2 will be appropriate 
   # displayCrosses     - whether small crosses should be displayed in the centers of atoms
+  # displayAtomNumbers - whether atom numbers should be displayed in the centers of atoms
   # palette            - palette from the list returned by hcl.pals() function or the string 'my custom palette' 
   # rev                - rev param in hcl.colors() function
   # outMode            - 'plot': draws a TF map on the screen 
   #                      'file': saves a TF map to file 'fileName' (as png file)
   #                      'RData': saves the TF map of 'fileSize' in the 'fileName' (as R's matrix)
   #                       'console': writes basic data read from db files to a file
+  # fileName           - name of the png file
+  # fileSize           - file size in pixels
   # reportFile         - name of the file in which the data on the number of atoms created as a result 
   #                      of running the empi.exe program will be saved
+  # drawEllipses       - only for testing
   # plotSignals        - whether the 'original' and 'reconstructed' signals should also be displayed
   
   if (outMode != "plot" & outMode != "file" & outMode != "RData" & outMode != "console")
@@ -735,26 +745,21 @@ mp2tf <- function(
   s <- epochSize / f # ilość sekund
   
   # grid size in t 
-  t <- seq(from = 0, to = s , by = 1 / f) 
+  t <- seq(from = 0, to = s, length.out = epochSize) 
   
   # according to the Nyquist criterion
   maxf <- round((f / 2) / freqDivide) 
   
   # grid size in f
-  y <- seq(from = 0, to = maxf, by = 1 / increaseFactor)  
+  y <- seq(from = 0, to = maxf, length.out = maxf * increaseFactor)  
   
   # in the empi program channels are numbered from 0
   rows <- which(lDataFrames[[1]]$channel_id == (channel - 1)) 
-  
-  # correction factor
-  dd <- epochSize / f
-  
+
   # t-f map
   tf.map <- matrix(0, nrow = epochSize, ncol = maxf * increaseFactor)
   
-  grid.x <- seq(from = 0, to = s, length.out = epochSize)
-  grid.y <- seq(from = 0, to = f / 2 / freqDivide, length.out = maxf * increaseFactor)
-  mtx <- as.matrix(expand.grid(grid.x, grid.y))
+  grid <- expand.grid(x = t, y = y)
   
   if (length(rows) == 0) {
     stop("\n--> There is no channel number ", channel,  " <--", sep = "")
@@ -827,37 +832,63 @@ mp2tf <- function(
     gabor <- NA
   }
   
-  # https://en.wikipedia.org/wiki/Error_function
-  erf <- function(x) 2 * pnorm(x * sqrt(2)) - 1 
-  SQRT_PI = sqrt(pi)
-  BI_SQRT_PI = 2 * SQRT_PI
-  tx <- seq(1:(length(t) - 1))
-  fy <- seq(1:(length(y) - 1))
-  tlowx <- tx - 1
-  tuppx <- tx
-  flowy <- (fy - 1) / increaseFactor
-  fuppy <- fy / increaseFactor
-  gauss.tx <- matrix(0, nrow = num.atoms, ncol = (length(t) - 1))
-  gauss.fy <- matrix(0, nrow = num.atoms, ncol = maxf * increaseFactor)
+  # Empty chart on which the ellipses will appear
+  if (drawEllipses) {
+    grid.matrix <- cbind(c(1,1,1,2,3))
+    layout(grid.matrix, widths = c(2,2,2), heights = c(3,1,1))
+    # mai: c(bottom, left, top, right)
+    par(pty = "m", mai = c(0.55, 0.6, 0.2, 0.4))
+    plot(0, xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)), type = "n", xlab = "", ylab = "", yaxs = "i", xaxs = "i") 
+  }
 
   for (n in 1:num.atoms) {
-
-    gt1 <- (BI_SQRT_PI / (scale[n] * f)) * (tlowx - (position[n] * f))
-    gt2 <- (BI_SQRT_PI / (scale[n] * f)) * (tuppx - (position[n] * f))
-    gauss.tx[n,] <- (erf(gt2) - erf(gt1)) 
-
-    gf1 <- (SQRT_PI * (scale[n] * f) / epochSize) * dd * (flowy  - (frequency[n]))
-    gf2 <- (SQRT_PI * (scale[n] * f) / epochSize) * dd * (fuppy  - (frequency[n]))
-    gauss.fy[n,] <- (erf(gf2) - erf(gf1)) 
-
-    if (mode == "sqrt") 
-      tf.map <- tf.map + kronecker(gauss.tx[n,], t(gauss.fy[n,])) * sqrt(energy[n] * f)
     
+    if (drawEllipses) {
+      out <- DrawEllipse(
+        x = position[n], 
+        y = frequency[n], 
+        # from Heisenberg rule: delta_t x delta_omega >= 1/2
+        radius.x = (scale[n] / 2), 
+        radius.y = 1 / ((scale[n])), 
+        col = "lightgray", 
+        border = "black", 
+        plot = TRUE,
+        nv = 100)
+
+      if (displayCrosses) {
+        points(position[n], frequency[n] , pch = 3, col = "black", cex = 0.7)
+      }
+      
+      if(displayAtomNumbers) {
+        text(position[n], frequency[n], n, col = "black", cex = 0.9)
+      }
+    }
+ 
+    if (mode == "sqrt") 
+      A  <- sqrt(energy[n] * f)
+
     if (mode == "log") 
-      tf.map <- tf.map + kronecker(gauss.tx[n,], t(gauss.fy[n,])) * log(energy[n] * f)
+      A  <- log(energy[n] * f)
     
     if (mode == "linear") 
-      tf.map <- tf.map + kronecker(gauss.tx[n,], t(gauss.fy[n,])) * energy[n] * f
+      A  <- energy[n] * f 
+    
+    radius.x = (scale[n] / 2) / shorteningFactor.x
+    radius.y = 1 / ((scale[n])) / shorteningFactor.y
+    
+    x0 <- position[n]
+    y0 <- frequency[n]
+    sx <- radius.x
+    sy <- radius.y
+    
+    # 2D Gaussian
+    z <- with(grid,
+              A * exp(-((x - x0)^2 / (2 * sx^2) +
+                        (y - y0)^2 / (2 * sy^2))))
+    
+    # convert to a matrix, because image() requires it
+    Z <- matrix(z, nrow = length(t), ncol = length(y))
+    tf.map <- tf.map + Z
       
   } # for (n in 1:num.atoms)
   
@@ -872,24 +903,29 @@ mp2tf <- function(
       par(mai = c(0.9, 0.9, 0.2, 0.4))
     }
     
-    graphics::image(
-      x = t, y = y, z = tf.map,
-      xlab = "Time [s]", ylab = "Frequency [Hz]", cex.axis = 1.0, cex.lab = 1.0, col = col
-    )
-
-    # W środkach atomów wyświetlamy małe krzyżyki
-    if (displayCrosses) 
-      points(position, frequency, pch = 3, col = crossesColor, cex = 0.7)
+    graphics::image(x = t, y = y, z = tf.map, col = col)
     
-    if (grid) 
+    # At the centers of the atoms, the atom numbers
+    if (displayAtomNumbers) {
+      for (n in 1:num.atoms) {
+        text(position[n], frequency[n], n, col = "white", cex = 0.9)
+      }
+    }
+
+    # We display small crosses in the centers of atoms
+    if (displayCrosses) {
+      points(position, frequency, pch = 3, col = crossesColor, cex = 0.9)
+    }
+    
+    if (displayGrid) 
       grid(col = "grey")
     
     if (plotSignals) {
       xx <- seq(from = 0, to = epochSize / f, length.out =  epochSize)
-      plot(x = xx, originalSignal, type = "l", xlab = "", ylab = "", xaxs = "i", main = "original", panel.first = grid())
+      plot(x = xx, originalSignal, type = "l", xlab = "", ylab = "", xaxs = "i", main = "Original signal", panel.first = grid())
       abline(h = 0, col = "blue")
       
-      plot(x = xx, reconstruction, type = "l", xlab = "", ylab = "", xaxs = "i", main = "reconstructed", panel.first = grid())
+      plot(x = xx, reconstruction, type = "l", xlab = "", ylab = "", xaxs = "i", main = "Reconstructed signal", panel.first = grid())
       abline(h = 0, col = "blue")
     }
     
@@ -899,23 +935,13 @@ mp2tf <- function(
     graphics.off()
     png(fileName, width = fileSize[1], height = fileSize[2], pointsize = 18)
     par(pty = "m", mai = c(0, 0, 0, 0))
-    
-    
-    graphics::image(
-      x = t, y = y, z = tf.map,
-      xlab = "", ylab = "", col = col,
-      yaxt = "n", xaxt = "n"
-    )
-    
-    if (displayCrosses) 
-      points(position, frequency, pch = 3, col = crossesColor, cex = 0.7)      
-    
+    graphics::image(x = t, y = y, z = tf.map, col = col)
     dev.off()
   } # if (outMode == "file")
   
   if (outMode == "RData") { 
     zz  <- tf.map      
-    # Usuwamy rozszerzenie
+    # Remove extension
     fileName <- paste(tools::file_path_sans_ext(fileName), ".RData", sep = "")
     
     rr <- raster::raster(nrow = ncol(zz), ncol = nrow(zz)) # # this is how it should be: nrow = ncol(zz), ncol = nrow(zz)
@@ -1043,12 +1069,12 @@ generate_RData_files <- function(
         freqDivide = 4,
         increaseFactor= 16,
         displayCrosses = FALSE,
-        grid = FALSE,
-        crossesColor = "white",
+        displayGrid = FALSE,
         outMode = "RData",
         fileName = tfFileName,
         fileSize = tf_file_size,
-        reportFile =report_file
+        reportFile =report_file,
+        plotSignals = FALSE
       )
     }
     df <- data.frame(fs = fs, fns = fns, i = i, total =  length(files), row.names = NULL)
