@@ -814,7 +814,7 @@ mp2tf <- function(
       reconstruction <- reconstruction + out$gabor * sqrt(energy[i] * f)
       gabor[i,] <- out$gabor
     }
-    
+
     # We read the input data from the .db file (they are stored there as float32 numbers)
     # For example: c0 74 23 f3  =  -3.81469
     originalSignal <- NA
@@ -830,12 +830,13 @@ mp2tf <- function(
     reconstruction <- NA
     originalSignal <- NA
     gabor <- NA
-  }
+  } # if (outMode != "RData") 
   
+
   # Empty chart on which the ellipses will appear
   if (drawEllipses) {
-    grid.matrix <- cbind(c(1,1,1,2,3))
-    layout(grid.matrix, widths = c(2,2,2), heights = c(3,1,1))
+    grid.matrix <- cbind(c(1, 1, 1, 2, 3))
+    layout(grid.matrix, widths = c(2, 2, 2), heights = c(3, 1, 1))
     # mai: c(bottom, left, top, right)
     par(pty = "m", mai = c(0.55, 0.6, 0.2, 0.4))
     plot(0, xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)), type = "n", xlab = "", ylab = "", yaxs = "i", xaxs = "i") 
@@ -860,7 +861,7 @@ mp2tf <- function(
       }
       
       if(displayAtomNumbers) {
-        text(position[n], frequency[n], n, col = "black", cex = 0.9)
+        text(position[n], frequency[n], n, col = "black", cex = 0.8)
       }
     }
  
@@ -891,7 +892,7 @@ mp2tf <- function(
     tf.map <- tf.map + Z
       
   } # for (n in 1:num.atoms)
-  
+
   if (outMode == "plot") {  
     if (plotSignals) {
       grid.matrix <- cbind(c(1,1,1,2,3))
@@ -903,18 +904,18 @@ mp2tf <- function(
       par(mai = c(0.9, 0.9, 0.2, 0.4))
     }
     
-    graphics::image(x = t, y = y, z = tf.map, col = col)
+    graphics::image(x = t, y = y, z = tf.map, col = col, xlab = "Time [s]", ylab = "Frequency [Hz]")
     
     # At the centers of the atoms, the atom numbers
     if (displayAtomNumbers) {
       for (n in 1:num.atoms) {
-        text(position[n], frequency[n], n, col = "white", cex = 0.9)
+        text(position[n], frequency[n], n, col = "white", cex = 0.8)
       }
     }
 
     # We display small crosses in the centers of atoms
     if (displayCrosses) {
-      points(position, frequency, pch = 3, col = crossesColor, cex = 0.9)
+      points(position, frequency, pch = 3, col = crossesColor, cex = 0.7)
     }
     
     if (displayGrid) 
@@ -959,7 +960,7 @@ mp2tf <- function(
     }
     save(tf.matrix, file = fileName)
   } # if (outMode == "RData")
-  
+
   list(
     gaborFunctions = gabor, 
     atoms = atoms,
