@@ -895,12 +895,12 @@ mp2tf <- function(
 
   if (outMode == "plot") {  
     if (plotSignals) {
-      grid.matrix <- cbind(c(1,1,1,2,3))
-      layout(grid.matrix, widths = c(2,2,2), heights = c(3,1,1))
+      grid.matrix <- cbind(c(1, 1, 1, 2, 3))
+      layout(grid.matrix, widths = c(2, 2, 2), heights = c(3, 1, 1))
       # mai: c(bottom, left, top, right)
       par(pty = "m", mai = c(0.55, 0.6, 0.2, 0.4))
     } else {
-      par(mfrow = c(1,1), pty = "m")
+      par(mfrow = c(1, 1), pty = "m")
       par(mai = c(0.9, 0.9, 0.2, 0.4))
     }
     
@@ -1084,7 +1084,7 @@ generate_RData_files <- function(
 }  
 
 # ///////////////////////////////////////////////////////////////////////////////////////////
-signal_energy <- function(SQLiteFile, channel, verbose = FALSE) {
+signal_energy <- function(SQLiteFile, channel, verbose = TRUE) {
   lDataFrames <- readSQLite(SQLiteFile)
   
   # Sampling rate in Hz
@@ -1109,9 +1109,9 @@ signal_energy <- function(SQLiteFile, channel, verbose = FALSE) {
   epochSize <- lDataFrames[[4]][["sample_count"]] 
   
   if (verbose) {
-    cat("\n\nPlik SQLite: ", SQLiteFile, "\n", sep = "")
-    cat("Kanał: ", channel, "\n", sep = "")
-    cat("Ilość atomów: ", num.atoms, "\n", sep = "")
+    cat("\n\nSQLite file:                        ", SQLiteFile, "\n", sep = "")
+    cat("Channel number:                     ", channel, "\n", sep = "")
+    cat("Number of atoms:                    ", num.atoms, "\n", sep = "")
   }
   
   # Based on the results returned by empi, we reconstruct the individual atoms
@@ -1144,9 +1144,9 @@ signal_energy <- function(SQLiteFile, channel, verbose = FALSE) {
   r <- round(sum(reconstructedSignal^2), 2)
   
   if (verbose) {
-    cat("Energy of the original signal: ",o , "\n", sep = "")
+    cat("Energy of the original signal:      ",o , "\n", sep = "")
     cat("Signal energy after reconstruction: ",r , "\n", sep = "")
-    cat("reconstruction / original %: ", r / o * 100, "\n", sep = "")
+    cat("reconstruction / original %:        ", r / o * 100, "\n", sep = "")
   }
   
   list(
