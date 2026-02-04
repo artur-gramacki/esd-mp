@@ -116,20 +116,20 @@ system(run_command)
 run_command  <- paste(python_dir, "python.exe ", " ../Python/split_data.py", sep = "")
 system(run_command)
 
-#///////////////////////////////////////////////////////////////////////////////////////////
-#///////////////////////////////////////////////////////////////////////////////////////////
-# Demonstrations. Some examples showing the most important elements of data processing ----
-#///////////////////////////////////////////////////////////////////////////////////////////
-#///////////////////////////////////////////////////////////////////////////////////////////
+############################################################################################
+############################################################################################
+# Demonstrations. Some examples showing the most important elements of data processing
+############################################################################################
+############################################################################################
 
 source("my_custom_palette.R")
 source("funs.R")
 
-#///////////////////////////////////////////////////////////////////////////////////////////
-# MP decomposition of a sample EEG data (saved as 64-bit binary file) ----
+############################################################################################
+# MP decomposition of a sample EEG data (saved as 64-bit binary file)
 # Sampling frequency was 256HZ, the data is 10s long
 # So, the size of the sample.bin file is: 256 x 10 x 8 = 20480 bytes
-#///////////////////////////////////////////////////////////////////////////////////////////
+############################################################################################
 command <- paste(
   "../empi_1.0.3/empi.exe ",
   "sample/sample.bin ",
@@ -138,9 +138,9 @@ command <- paste(
   sep = "")
 system(command)
 
-#///////////////////////////////////////////////////////////////////////////////////////////
-# Display sample time-frequency map on the screen ----
-#///////////////////////////////////////////////////////////////////////////////////////////
+############################################################################################
+# Display sample time-frequency map on the screen
+############################################################################################
 out <- mp2tf(
   SQLiteFile = "sample/sample.db", 
   channel = 1, 
@@ -148,16 +148,16 @@ out <- mp2tf(
   freqDivide = 4,
   increaseFactor = 4,
   displayCrosses = TRUE, 
-  grid = FALSE, 
+  displayGrid = FALSE, 
   crossesColor = "white", 
   palette = "my custom palette", 
   rev = TRUE,
   outMode = "plot"
 )
 
-#///////////////////////////////////////////////////////////////////////////////////////////
-# Save sample time-frequency map to the png file ----
-#///////////////////////////////////////////////////////////////////////////////////////////
+############################################################################################
+# Save sample time-frequency map to the png file
+############################################################################################
 out <- mp2tf(
   SQLiteFile = "sample/sample.db", 
   channel = 1, 
@@ -166,16 +166,16 @@ out <- mp2tf(
   increaseFactor = 16,
   displayCrosses = TRUE, 
   crossesColor = "white", 
-  grid = FALSE, 
+  displayGrid = FALSE, 
   palette = "my custom palette", 
   outMode = "file",
   fileName = "sample/sample.png",
   fileSize = c(512, 512),
 )
 
-#///////////////////////////////////////////////////////////////////////////////////////////
-# Save time-frequency map to RData file ----
-#///////////////////////////////////////////////////////////////////////////////////////////
+############################################################################################
+# Save time-frequency map to RData file
+############################################################################################
 out <- mp2tf(
   SQLiteFile = "sample/sample.db",
   channel = 1, 
@@ -183,17 +183,17 @@ out <- mp2tf(
   freqDivide = 4,
   increaseFactor = 16,
   displayCrosses = FALSE, 
-  grid = FALSE, 
+  displayGrid = FALSE, 
   palette = "my custom palette", 
   outMode = "RData",
   fileName = "sample/sample.RData",
   fileSize = c(64, 64),
 )
 
-#///////////////////////////////////////////////////////////////////////////////////////////
-# Read RData file form disk and display it's content on the screen ----
+############################################################################################
+# Read RData file form disk and display it's content on the screen
 # t-f map is 64x64 pixels in size. Then save it as png file. 
-#///////////////////////////////////////////////////////////////////////////////////////////
+############################################################################################
 load("sample/sample.RData")
 par(pty = "s")
 graphics::image(
@@ -210,9 +210,9 @@ par(pty = "m", mai = c(0, 0, 0, 0))
 graphics::image(z = tf.matrix, col = my_custom_palette)
 dev.off()
 
-#///////////////////////////////////////////////////////////////////////////////////////////
-# Read sample bin file, then execute STFT ----
-#///////////////////////////////////////////////////////////////////////////////////////////
+############################################################################################
+# Read sample bin file, then execute STFT 
+############################################################################################
 fn <- "sample/sample.bin"
 fs <- file.size(fn)
 fh <- file(fn, "rb")
@@ -256,9 +256,9 @@ axis(
   labels = seq(from = 0, to = 32, length.out = 9)
 )
 
-#///////////////////////////////////////////////////////////////////////////////////////////
-# Create RData file from STFT results (64 x 64 pixels in size) ----
-#///////////////////////////////////////////////////////////////////////////////////////////
+############################################################################################
+# Create RData file from STFT results (64 x 64 pixels in size)
+############################################################################################
 zz <- ft$values[,1:p]      
 rr <- raster::raster(nrow = ncol(zz), ncol = nrow(zz)) 
 rr[] <- t(zz)
@@ -274,10 +274,10 @@ if (max(m2) - min(m2) == 0) {
 }
 save(tf.matrix, file = "sample/sample_STFT.RData")
 
-#///////////////////////////////////////////////////////////////////////////////////////////
-# Read Rdata file form disk and display it's content on the screen ----
+############################################################################################
+# Read Rdata file form disk and display it's content on the screen
 # t-f map is 64x64 pixels in size. Then save it as png file. 
-#///////////////////////////////////////////////////////////////////////////////////////////
+############################################################################################
 load("sample/sample_STFT.RData")
 par(pty = "s")
 graphics::image(
@@ -293,3 +293,4 @@ png("sample/sample_STFT_64x64pixels.png", width = 64, height = 64, units = "px",
 par(pty = "m", mai = c(0, 0, 0, 0))
 graphics::image(z = tf.matrix, col = my_custom_palette)
 dev.off()
+
