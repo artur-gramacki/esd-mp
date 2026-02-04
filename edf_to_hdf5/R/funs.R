@@ -835,11 +835,13 @@ mp2tf <- function(
 
   # Empty chart on which the ellipses will appear
   if (drawEllipses) {
-    grid.matrix <- cbind(c(1, 1, 1, 2, 3))
-    layout(grid.matrix, widths = c(2, 2, 2), heights = c(3, 1, 1))
+    #grid.matrix <- cbind(c(1, 1, 1, 2, 3))
+    #layout(grid.matrix, widths = c(2, 2, 2), heights = c(3, 1, 1))
     # mai: c(bottom, left, top, right)
-    par(pty = "m", mai = c(0.55, 0.6, 0.2, 0.4))
-    plot(0, xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)), type = "n", xlab = "", ylab = "", yaxs = "i", xaxs = "i") 
+  	par(mfrow = c(1, 1), pty = "m")
+  	par(mai = c(0.9, 0.9, 0.2, 0.4))
+    plot(0, xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)), type = "n", las = 1,
+    		 xlab = "Time [s]", ylab = "Frequency [Hz]", yaxs = "i", xaxs = "i") 
   }
 
   for (n in 1:num.atoms) {
@@ -904,7 +906,10 @@ mp2tf <- function(
       par(mai = c(0.9, 0.9, 0.2, 0.4))
     }
     
-    graphics::image(x = t, y = y, z = tf.map, col = col, xlab = "Time [s]", ylab = "Frequency [Hz]")
+    graphics::image(x = t, y = y, z = tf.map, col = col, las = 1,
+    								xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)),
+    								yaxs = "i", xaxs = "i",
+    								xlab = "Time [s]", ylab = "Frequency [Hz]")
     
     # At the centers of the atoms, the atom numbers
     if (displayAtomNumbers) {
