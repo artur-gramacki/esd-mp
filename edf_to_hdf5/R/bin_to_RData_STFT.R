@@ -141,15 +141,15 @@ for (i in 1:6) {
         # Rescaling to the range 0-1
         # Protect against a situation where a zero appears in the denominator
         if (max(m2) - min(m2) == 0) {
-          tf.matrix <- matrix(0, tf_file_size[1], tf_file_size[2])  
+        	tf.map.resampled <- matrix(0, tf_file_size[1], tf_file_size[2])  
         } else {
-          tf.matrix <- (m2 - min(m2)) / (max(m2) - min(m2))
+        	tf.map.resampled <- (m2 - min(m2)) / (max(m2) - min(m2))
         }
-        save(tf.matrix, file = tfFileName)
+        save(tf.map.resampled, file = tfFileName)
       
         # -- for testing only --
         # load(tfFileName)
-        # graphics::image(tf.matrix, col = my_custom_palette)
+        # graphics::image(tf.map.resampled, col = my_custom_palette)
       } # if (!save_to_png)
     } # for (m in 1: 18)
 

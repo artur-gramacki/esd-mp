@@ -27,7 +27,7 @@ def create_input_data(mask, image_directory):
  
     result = pyreadr.read_r(f[0])
     result.keys()
-    df = result["tf.matrix"]
+    df = result["tf.map.resampled"]
     size = df.shape
     
     print("Number of files:", len(f), flush = True)
@@ -57,7 +57,7 @@ def create_input_data(mask, image_directory):
         files = glob.glob(image_directory + mask + ff + '.RData', recursive = False)
         for j in range(0, len(files)):
             img = pyreadr.read_r(files[j])
-            df = img["tf.matrix"]
+            df = img["tf.map.resampled"]
             img = np.float32(df)
             
             if np.isnan(img).any() == True:

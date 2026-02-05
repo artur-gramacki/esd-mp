@@ -104,7 +104,7 @@ par(mai = c(0.9, 0.9, 0.2, 0.4))
 graphics::image(
   x = seq(0, 10, length.out = 64), 
   y = seq(0, 32, length.out = 64), 
-  z = tf.matrix, 
+  z = tf.map.resampled, 
   col = my_custom_palette,
   #col = hcl.colors(256, "Grays", rev = FALSE),
   xlab = "Time [s]",

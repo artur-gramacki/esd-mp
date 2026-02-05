@@ -28,7 +28,7 @@ if(to_install) {
 pkgs <- c(
   "grid", "hht", "RSQLite", "grDevices", "colorRamps", 
   "gplots", "fields", "raster", "DescTools", "mvtnorm",
-  "signal", "Matrix", "latex2exp", "edf", "png")
+  "signal", "Matrix", "latex2exp", "edf", "png", "imager")
 
 to_install = !pkgs %in% installed.packages()
 if(any(to_install)) {
@@ -52,6 +52,7 @@ library("edf")
 library("png")
 library("rhdf5")
 library("signal")
+library("imager")
 
 # ///////////////////////////////////////////////////////////////////////////////////////////
 select_seizure_chunks <- function(data, f, k) {
@@ -699,7 +700,10 @@ mp2tf <- function(
   # outMode            - 'plot': draws a TF map on the screen 
   #                      'file': saves a TF map to file 'fileName' (as png file)
   #                      'RData': saves the TF map of 'fileSize' in the 'fileName' (as R's matrix)
-  #                       'console': writes basic data read from db files to a file
+	#                               resampling using 'imager::resize'
+	#                      'RData2': saves the TF map of 'fileSize' in the 'fileName' (as R's matrix)
+	#                               resampling using 'raster::resample'
+  #                      'console': writes basic data read from db files to a file
   # fileName           - name of the png file
   # fileSize           - file size in pixels
   # reportFile         - name of the file in which the data on the number of atoms created as a result 
@@ -707,7 +711,7 @@ mp2tf <- function(
   # drawEllipses       - only for testing
   # plotSignals        - whether the 'original' and 'reconstructed' signals should also be displayed
   
-  if (outMode != "plot" & outMode != "file" & outMode != "RData" & outMode != "console")
+  if (outMode != "plot" & outMode != "file" & outMode != "RData" & outMode != "RData2" & outMode != "console")
     stop("\n--> Incorrect value for 'outMode' parameter' <--")
   
   
@@ -946,24 +950,45 @@ mp2tf <- function(
   } # if (outMode == "file")
   
   if (outMode == "RData") { 
+  	
+  	im <- as.cimg(tf.map)
+  	im.resampled <- imager::resize(im, size_x = fileSize[1], size_y = fileSize[2], interpolation_type = 3)
+  	tf.map.resampled <- as.matrix(im.resampled)
+
+  	# Rescaling to the range 0-1
+  	# Protect against a situation where a zero appears in the denominator
+  	if (max(tf.map.resampled) - min(tf.map.resampled) == 0) {
+  		tf.map.resampled <- matrix(0, fileSize[1], fileSize[2])  
+  	} else {
+  		tf.map.resampled <- (tf.map.resampled - min(tf.map.resampled)) / (max(tf.map.resampled) - min(tf.map.resampled))
+  	}
+
+  	# Remove extension
+  	fileName <- paste(tools::file_path_sans_ext(fileName), ".RData", sep = "")
+    save(tf.map.resampled, file = fileName)
+  }
+  
+  if (outMode == "RData2") { 
+
     zz  <- tf.map      
-    # Remove extension
-    fileName <- paste(tools::file_path_sans_ext(fileName), ".RData", sep = "")
     
     rr <- raster::raster(nrow = ncol(zz), ncol = nrow(zz)) # # this is how it should be: nrow = ncol(zz), ncol = nrow(zz)
     rr[] <- t(zz)
     tt <- raster::raster(ncol = fileSize[1], nrow = fileSize[2])
     tt <- raster::resample(rr, tt)
-    m2 <- matrix(tt@data@values, fileSize[1], fileSize[2])
-    # graphics::image(m2, col = col)
+    tf.map.resampled <- matrix(tt@data@values, fileSize[1], fileSize[2])
+
     # Rescaling to the range 0-1
     # Protect against a situation where a zero appears in the denominator
-    if (max(m2) - min(m2) == 0) {
-      tf.matrix <- matrix(0, fileSize[1], fileSize[2])  
+    if (max(tf.map.resampled) - min(tf.map.resampled) == 0) {
+    	tf.map.resampled <- matrix(0, fileSize[1], fileSize[2])  
     } else {
-      tf.matrix <- (m2 - min(m2)) / (max(m2) - min(m2))
+    	tf.map.resampled <- (tf.map.resampled - min(tf.map.resampled)) / (max(tf.map.resampled) - min(tf.map.resampled))
     }
-    save(tf.matrix, file = fileName)
+    
+    # Remove extension
+    fileName <- paste(tools::file_path_sans_ext(fileName), ".RData", sep = "")
+    save(tf.map.resampled, file = fileName)
   } # if (outMode == "RData")
 
   list(
@@ -1073,7 +1098,7 @@ generate_RData_files <- function(
         mode = "sqrt",
         # 4 means we are limited to 32Hz
         freqDivide = 4,
-        increaseFactor= 16,
+        increaseFactor= 2,
         displayCrosses = FALSE,
         displayGrid = FALSE,
         outMode = "RData",

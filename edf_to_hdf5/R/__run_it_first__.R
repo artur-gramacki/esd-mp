@@ -146,7 +146,7 @@ out <- mp2tf(
   channel = 1, 
   mode = "sqrt", 
   freqDivide = 4,
-  increaseFactor = 4,
+  increaseFactor = 8,
   displayCrosses = TRUE, 
   displayGrid = FALSE, 
   crossesColor = "white", 
@@ -181,7 +181,7 @@ out <- mp2tf(
   channel = 1, 
   mode = "sqrt", 
   freqDivide = 4,
-  increaseFactor = 16,
+  increaseFactor = 2, 
   displayCrosses = FALSE, 
   displayGrid = FALSE, 
   palette = "my custom palette", 
@@ -199,7 +199,7 @@ par(pty = "s")
 graphics::image(
   x = seq(0, 10, length.out = 64), 
   y = seq(0, 32, length.out = 64), 
-  z = tf.matrix, 
+  z = tf.map.resampled, 
   col = my_custom_palette,
   xlab = "Time [s]",
   ylab = "Frequency [Hz]" )
@@ -207,7 +207,7 @@ graphics::image(
 graphics.off()
 png("sample/sample_64x64pixels.png", width = 64, height = 64, units = "px", type = "cairo-png")
 par(pty = "m", mai = c(0, 0, 0, 0))
-graphics::image(z = tf.matrix, col = my_custom_palette)
+graphics::image(z = tf.map.resampled, col = my_custom_palette)
 dev.off()
 
 ############################################################################################
@@ -268,11 +268,11 @@ m2 <- matrix(tt@data@values, 64, 64)
 # Rescaling to the range 0-1
 # Protect against a situation where a zero appears in the denominator
 if (max(m2) - min(m2) == 0) {
-  tf.matrix <- matrix(0, 64, 64)  
+	tf.map.resampled <- matrix(0, 64, 64)  
 } else {
-  tf.matrix <- (m2 - min(m2)) / (max(m2) - min(m2))
+	tf.map.resampled <- (m2 - min(m2)) / (max(m2) - min(m2))
 }
-save(tf.matrix, file = "sample/sample_STFT.RData")
+save(tf.map.resampled, file = "sample/sample_STFT.RData")
 
 ############################################################################################
 # Read Rdata file form disk and display it's content on the screen
@@ -283,7 +283,7 @@ par(pty = "s")
 graphics::image(
   x = seq(0, 10, length.out = 64), 
   y = seq(0, 32, length.out = 64), 
-  z = tf.matrix, 
+  z = tf.map.resampled, 
   col = my_custom_palette,
   xlab = "Time [s]",
   ylab = "Frequency [Hz]" )
@@ -291,6 +291,6 @@ graphics::image(
 graphics.off()
 png("sample/sample_STFT_64x64pixels.png", width = 64, height = 64, units = "px", type = "cairo-png")
 par(pty = "m", mai = c(0, 0, 0, 0))
-graphics::image(z = tf.matrix, col = my_custom_palette)
+graphics::image(z = tf.map.resampled, col = my_custom_palette)
 dev.off()
 
