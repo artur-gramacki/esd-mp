@@ -910,22 +910,29 @@ mp2tf <- function(
       par(mai = c(0.9, 0.9, 0.2, 0.4))
     }
     
-    graphics::image(x = t, y = y, z = tf.map, col = col, las = 1,
+    graphics::image(x = t, y = y, z = tf.map, col = col, las = 1, 
     								#xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)),
     								yaxs = "i", xaxs = "i",
     								xaxt = "n",	yaxt = "n",
     								xlab = "Time [s]", ylab = "Frequency [Hz]")
     
+    
+    
+    
+    lab <- seq(from = 0, to = ceiling(tail(t, 1)), length.out = 11)
     axis(
-    	side = 1, las = 1,
-    	at = seq(from = 0, to = ceiling(tail(t, 1)), length.out = 9)
+    	side = 1, las = 1, cex.axis = 0.9,
+    	at = seq(from = 0, to = ceiling(tail(t, 1)), length.out = 11),
     	#at = seq(0, ceiling(max(t)), by = 2)
+    	labels = c(formatC(lab, format = "f", digits = 2))
     )
 
+    lab <- seq(from = 0, to = ceiling(tail(y, 1)), length.out = 11)
     axis(
-    	side = 2, las = 1, 
-    	at = seq(from = 0, to = ceiling(tail(y, 1)), length.out = 9)
+    	side = 2, las = 1,  cex.axis = 0.9,
+    	at = seq(from = 0, to = ceiling(tail(y, 1)), length.out = 11),
     	#at = seq(0, ceiling(max(y)), by = 2)
+    	labels = c(formatC(lab, format = "f", digits = 2))
     )
     
     # At the centers of the atoms, the atom numbers
