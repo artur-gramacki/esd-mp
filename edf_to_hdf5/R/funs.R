@@ -911,9 +911,22 @@ mp2tf <- function(
     }
     
     graphics::image(x = t, y = y, z = tf.map, col = col, las = 1,
-    								xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)),
+    								#xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)),
     								yaxs = "i", xaxs = "i",
+    								xaxt = "n",	yaxt = "n",
     								xlab = "Time [s]", ylab = "Frequency [Hz]")
+    
+    axis(
+    	side = 1, las = 1,
+    	at = seq(from = 0, to = ceiling(tail(t, 1)), length.out = 9)
+    	#at = seq(0, ceiling(max(t)), by = 2)
+    )
+
+    axis(
+    	side = 2, las = 1, 
+    	at = seq(from = 0, to = ceiling(tail(y, 1)), length.out = 9)
+    	#at = seq(0, ceiling(max(y)), by = 2)
+    )
     
     # At the centers of the atoms, the atom numbers
     if (displayAtomNumbers) {
