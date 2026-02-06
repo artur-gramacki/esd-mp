@@ -674,7 +674,7 @@ mp2tf <- function(
   displayAtomNumbers = FALSE,
   displayGrid = FALSE,
   crossesColor = "white",
-  palette = 'Lajolla', 
+  palette = 'my custom palette', 
   rev = TRUE,
   outMode = "file",
   fileName = "sample.png",
@@ -912,14 +912,16 @@ mp2tf <- function(
       par(xaxs = "i", yaxs = "i")
     }
     
+  	#
   	# Drawing with graphics::image() is very slow, especially for large matrices. 
+  	#
   	# Graphics::rasterImage() is much faster.
     #  graphics::image(x = t, y = y, z = tf.map, col = col, las = 1,
     # 								#xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)),
     # 								yaxs = "i", xaxs = "i",
     # 								xaxt = "n",	yaxt = "n",
     # 								xlab = "Time [s]", ylab = "Frequency [Hz]")
-    # # 
+    #  
 
    	z.col <- col[cut(tf.map, breaks = 129)]
   	# image() and rasterImage() differ in the orientation of the Y axis.
