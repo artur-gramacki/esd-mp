@@ -905,20 +905,31 @@ mp2tf <- function(
       layout(grid.matrix, widths = c(2, 2, 2), heights = c(3, 1, 1))
       # mai: c(bottom, left, top, right)
       par(pty = "m", mai = c(0.55, 0.6, 0.2, 0.4))
+      par(xaxs = "i", yaxs = "i")
     } else {
       par(mfrow = c(1, 1), pty = "m")
       par(mai = c(0.9, 0.9, 0.2, 0.4))
+      par(xaxs = "i", yaxs = "i")
     }
     
-    graphics::image(x = t, y = y, z = tf.map, col = col, las = 1, 
-    								#xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)),
-    								yaxs = "i", xaxs = "i",
-    								xaxt = "n",	yaxt = "n",
-    								xlab = "Time [s]", ylab = "Frequency [Hz]")
-    
-    
-    
-    
+  	# Drawing with graphics::image() is very slow, especially for large matrices. 
+  	# Graphics::rasterImage() is much faster.
+    #  graphics::image(x = t, y = y, z = tf.map, col = col, las = 1,
+    # 								#xlim = c(0, tail(t, 1)), ylim = c(0, tail(y, 1)),
+    # 								yaxs = "i", xaxs = "i",
+    # 								xaxt = "n",	yaxt = "n",
+    # 								xlab = "Time [s]", ylab = "Frequency [Hz]")
+    # # 
+
+   	z.col <- col[cut(tf.map, breaks = 129)]
+  	# image() and rasterImage() differ in the orientation of the Y axis.
+  	# Often you also need to do the following:
+   	rot90 <- function(m) t(m)[ncol(m):1, ]
+   	tf.map.rot90 <- rot90(matrix(z.col, nrow(tf.map)))
+  	plot.new()
+  	plot.window(range(t), range(y))
+  	rasterImage(tf.map.rot90, 0, 0, ceiling(tail(t, 1)), ceiling(tail(y, 1)))
+
     lab <- seq(from = 0, to = ceiling(tail(t, 1)), length.out = 11)
     axis(
     	side = 1, las = 1, cex.axis = 0.9,
@@ -934,6 +945,10 @@ mp2tf <- function(
     	#at = seq(0, ceiling(max(y)), by = 2)
     	labels = c(formatC(lab, format = "f", digits = 2))
     )
+
+    box()    
+    mtext("Time [s]", side = 1, line = 2.5)
+    mtext("Frequency [Hz]", side = 2, line = 3)
     
     # At the centers of the atoms, the atom numbers
     if (displayAtomNumbers) {
@@ -952,10 +967,10 @@ mp2tf <- function(
     
     if (plotSignals) {
       xx <- seq(from = 0, to = epochSize / f, length.out =  epochSize)
-      plot(x = xx, originalSignal, type = "l", xlab = "", ylab = "", xaxs = "i", main = "Original signal", panel.first = grid())
+      plot(x = xx, originalSignal, type = "l", xlab = "", ylab = "", xaxs = "i", las = 1, main = "Original signal", panel.first = grid())
       abline(h = 0, col = "blue")
       
-      plot(x = xx, reconstruction, type = "l", xlab = "", ylab = "", xaxs = "i", main = "Reconstructed signal", panel.first = grid())
+      plot(x = xx, reconstruction, type = "l", xlab = "", ylab = "", xaxs = "i", las = 1, main = "Reconstructed signal", panel.first = grid())
       abline(h = 0, col = "blue")
     }
     
