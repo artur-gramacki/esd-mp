@@ -930,7 +930,7 @@ mp2tf <- function(
    	tf.map.rot90 <- rot90(matrix(z.col, nrow(tf.map)))
   	plot.new()
   	plot.window(range(t), range(y))
-  	rasterImage(tf.map.rot90, 0, 0, ceiling(tail(t, 1)), ceiling(tail(y, 1)))
+  	rasterImage(tf.map.rot90, 0, 0, tail(t, 1), tail(y, 1))
 
     lab <- seq(from = 0, to = ceiling(tail(t, 1)), length.out = 11)
     axis(
